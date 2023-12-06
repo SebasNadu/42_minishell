@@ -6,7 +6,7 @@
 /*   By: johnavar <johnavar@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 16:45:19 by johnavar          #+#    #+#             */
-/*   Updated: 2023/12/04 17:47:50 by jmigoya-         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:13:13 by johnavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	clean_and_exit(t_data *mish)
 		if (mish->pids)
 			free(mish->pids);
 	}
-	exit(g_exit_status);
+	exit(mish->exit_status);
 }
 
 void	print_error2(int err)
@@ -88,15 +88,15 @@ void	handle_exit(t_data *mish, char *param, int err, int is_exit)
 {
 	if (err == FORK_ERR || err == PIPE_ERR || err == HIS_WRONG_ARG
 		|| err == HIS_WRONG_ARGS || err == CD_ERR)
-		g_exit_status = 1;
+		mish->exit_status = 1;
 	else if (err == SYNTAX_ERR)
-		g_exit_status = 2;
+		mish->exit_status = 2;
 	else if (err == CMD_NOT_FOUND)
-		g_exit_status = 127;
+		mish->exit_status = 127;
 	else if (err == IS_DIR)
-		g_exit_status = 126;
+		mish->exit_status = 126;
 	else
-		g_exit_status = err;
+		mish->exit_status = err;
 	if (err != SUCCESS && err != FAILURE && err != ERROR)
 		print_error(param, err);
 	if (is_exit)

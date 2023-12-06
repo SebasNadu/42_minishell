@@ -6,7 +6,7 @@
 /*   By: jmigoya- <jmigoya-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:49:09 by jmigoya-          #+#    #+#             */
-/*   Updated: 2023/12/04 17:55:40 by jmigoya-         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:12:03 by johnavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	wait_loop(t_data *mish, int c)
 	}
 	waitpid(mish->pids[i], &status, 0);
 	if (WIFEXITED(status))
-		g_exit_status = WEXITSTATUS(status);
+		mish->exit_status = WEXITSTATUS(status);
 }
 
 // Handles execution. If only one, built-in command,

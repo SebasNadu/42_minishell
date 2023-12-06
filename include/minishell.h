@@ -6,7 +6,7 @@
 /*   By: jmigoya- <jmigoya-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 14:22:24 by migmanu           #+#    #+#             */
-/*   Updated: 2023/11/29 17:32:43 by johnavar         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:09:22 by johnavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,5 @@
 # define PRT_DEF 0
 # define PRT_EXP 1
 # define PRT_ENV 2
-
-extern int	g_exit_status;
 
 #endif

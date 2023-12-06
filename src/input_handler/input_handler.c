@@ -6,12 +6,13 @@
 /*   By: sebasnadu <johnavar@student.42berlin.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 15:20:01 by sebasnadu         #+#    #+#             */
-/*   Updated: 2023/12/03 13:46:19 by sebasnadu        ###   ########.fr       */
+/*   Updated: 2023/12/06 18:23:26 by johnavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+// Split the input into words(characters between spaces and redirection symbols)
 static char	**tokenizer(char *line)
 {
 	char	**words;
@@ -30,6 +31,8 @@ static char	**tokenizer(char *line)
 	return (words);
 }
 
+// If there a token after the expansion become into a null for some reason,
+// redefine create a new matrix without the null token.
 static void	redefine_matrix(char **matrix, int i, int matrix_len)
 {
 	int		j;
@@ -50,7 +53,7 @@ static void	redefine_matrix(char **matrix, int i, int matrix_len)
 	}
 }
 
-// Revisar los tokens eliminando los que esten como null
+// Find expander symbols like $ or ~ to expand the variable if it is possible
 static void	expander(t_data *mish, char **tokens)
 {
 	int	i;
@@ -71,7 +74,12 @@ static void	expander(t_data *mish, char **tokens)
 	}
 }
 
-static t_list	*fill_syntax_list(char **tokens, int i)
+// Trim the quotes of the whole token, if there are quotes.
+// Then create a syntatic list, each node has the tokens in a matrix,
+// a new node is create if there is a new command and only is possible
+// to be a new command if there is a "|" pipe, get_node also define if the token
+// represent a redirection or a command, and behaves in relation to it.
+static t_list	*fill_syntax_list(t_data *mish, char **tokens, int i)
 {
 	char	**tmp[2];
 	t_list	*cmds[2];
@@ -89,7 +97,7 @@ static t_list	*fill_syntax_list(char **tokens, int i)
 			ft_lstadd_back(&cmds[0], ft_lstnew(init_node()));
 			cmds[1] = ft_lstlast(cmds[0]);
 		}
-		cmds[1]->content = get_node(cmds[1]->content, tmp, &i);
+		cmds[1]->content = get_node(mish, cmds[1]->content, tmp, &i);
 		if (i < 0)
 			return (clean_fail(cmds[0], tokens, tmp[0]));
 		if (!tokens[i])
@@ -100,6 +108,9 @@ static t_list	*fill_syntax_list(char **tokens, int i)
 	return (cmds[0]);
 }
 
+// Control the parsing of the input. Tokenizer split the input into tokens.
+// Expander, handle the expansions. Fill_syntax_list create a list dividing the
+// commands and handling the redirections.
 void	*input_handler(char *line, t_data *mish)
 {
 	char	**tokens;
@@ -112,6 +123,6 @@ void	*input_handler(char *line, t_data *mish)
 		return ("");
 	}
 	expander(mish, tokens);
-	mish->cmds = fill_syntax_list(tokens, -1);
+	mish->cmds = fill_syntax_list(mish, tokens, -1);
 	return (mish);
 }

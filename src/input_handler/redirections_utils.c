@@ -6,7 +6,7 @@
 /*   By: sebasnadu <johnavar@student.42berlin.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 18:00:19 by sebasnadu         #+#    #+#             */
-/*   Updated: 2023/11/20 15:28:23 by jmigoya-         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:29:00 by johnavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static char	*get_heredoc_str(char *str[2], size_t len, char *limit, char *err)
 	return (str[1]);
 }
 
-int	get_heredoc_fd(char *limit)
+int	get_heredoc_fd(t_data *mish, char *limit)
 {
 	int		fd[2];
 	char	*err;
@@ -74,7 +74,7 @@ int	get_heredoc_fd(char *limit)
 
 	str[0] = NULL;
 	str[1] = NULL;
-	g_exit_status = 0;
+	mish->exit_status = 0;
 	err = "minishell: warning: here-document delimited by end-of-file";
 	if (pipe(fd) == -1)
 	{
@@ -85,7 +85,7 @@ int	get_heredoc_fd(char *limit)
 	write(fd[WRITE_END], str[1], ft_strlen(str[1]));
 	free(str[1]);
 	close(fd[WRITE_END]);
-	if (g_exit_status == 130)
+	if (mish->exit_status == 130)
 	{
 		close(fd[READ_END]);
 		return (-1);
